@@ -1,0 +1,38 @@
+imports:
+  - { resource: 'container.yml' }
+
+framework:
+    secret:          "%secret%"
+    router: { resource: "%kernel.project_dir%/app/config/routing.yml" }
+    test: ~
+    profiler: { collect: false }
+
+security:
+    providers:
+        api:
+            id: app.user_provider
+
+    firewalls:
+        api:
+            pattern: ^/api
+            anonymous: ~
+            stateless: true
+            provider: api
+            guard:
+                authenticators:
+                    - app.token_authenticator
+
+    access_control:
+        - { path: ^/api, roles: ROLE_USER }
+
+doctrine:
+    dbal:
+        driver:   pdo_sqlite
+        path:     "%database_path%"
+        dbname:   "%database_name%"
+        charset:  UTF8
+
+    orm:
+        auto_generate_proxy_classes: "%kernel.debug%"
+        naming_strategy: doctrine.orm.naming_strategy.underscore
+        auto_mapping: true

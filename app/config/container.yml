@@ -1,0 +1,24 @@
+parameters:
+    database_name: segfault-rep
+    database_path: '%kernel.root_dir%/../var/db.sqlite'
+    secret: daoi23513ihoejanvo1235313nlj
+
+services:
+    app.token_authenticator:
+        class: AppBundle\Security\TokenAuthenticator
+
+    app.user_provider:
+        class: AppBundle\Security\UserProvider
+        arguments: ['@app.user_repository']
+
+    app.article_repository:
+        class: Doctrine\ORM\EntityRepository
+        factory: ['@doctrine.orm.entity_manager', getRepository]
+        arguments:
+            - AppBundle\Entity\Article
+
+    app.user_repository:
+        class: Doctrine\ORM\EntityRepository
+        factory: ['@doctrine.orm.entity_manager', getRepository]
+        arguments:
+            - AppBundle\Entity\PortalUser
